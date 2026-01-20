@@ -5,31 +5,23 @@
 - Ingress: nginx
 - NodePort configured: 5678
 
-## 🚨 Quick Fix (Current Issues)
+## ✅ Raspberry Pi 32-bit Configuration (Working)
 
-### Fix ImagePullBackOff Error (Raspberry Pi 32-bit ARM)
-Your Raspberry Pi appears to be running a 32-bit OS. The latest n8n images do not support this architecture.
-We must use version **1.26.0** (the last version with ARMv7 support).
+Your setup requires specific settings because of the 32-bit ARM architecture and limited RAM.
 
-Run this to fix:
+### 1. Docker Image
+- **Image:** `n8nio/n8n:1.26.0`
+- **Reason:** Latest versions do not support 32-bit ARMv7.
 
-```bash
-# Run the automated fix script
-cd ~/n8n-k3s-pi
-sudo bash fix-deployment.sh
-```
+### 2. Resources
+- **Memory Request:** `250Mi` (Lowered from 512Mi)
+- **Reason:** Prevents "Insufficient memory" scheduling errors.
 
-Or manually:
-```bash
-# Delete the old deployment
-kubectl delete deployment n8n-deployment -n n8n
+### 3. Health Checks
+- **InitialDelay:** `60s`
+- **Reason:** Raspberry Pi takes longer to start the application.
 
-# Reapply with corrected image (v1.26.0)
-kubectl apply -f n8n-deployment.yaml
-
-# Wait for pod to be ready
-kubectl wait --for=condition=ready pod -l app=n8n -n n8n --timeout=120s
-```
+If you ever need to re-deploy, ensure `n8n-deployment.yaml` keeps these values.
 
 **Current Access:** Your n8n is configured as NodePort on port **32191**
 ```bash
