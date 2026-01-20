@@ -17,8 +17,9 @@ spec:
     spec:
       containers:
       - name: n8n
-        image: docker.n8n.io/n8nio/n8n:latest
-        imagePullPolicy: Always
+        # Info: Version 1.26.0 is the last version to support 32-bit ARM (armv7)
+        image: n8nio/n8n:1.26.0
+        imagePullPolicy: IfNotPresent
         ports:
         - name: http
           containerPort: 5678

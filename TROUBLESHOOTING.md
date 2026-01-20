@@ -7,12 +7,15 @@
 
 ## 🚨 Quick Fix (Current Issues)
 
-### Fix ImagePullBackOff Error
-The n8n pod is failing to pull the image. Run this to fix:
+### Fix ImagePullBackOff Error (Raspberry Pi 32-bit ARM)
+Your Raspberry Pi appears to be running a 32-bit OS. The latest n8n images do not support this architecture.
+We must use version **1.26.0** (the last version with ARMv7 support).
+
+Run this to fix:
 
 ```bash
 # Run the automated fix script
-cd ~/k3s_install/n8n-k3s
+cd ~/n8n-k3s-pi
 sudo bash fix-deployment.sh
 ```
 
@@ -21,7 +24,7 @@ Or manually:
 # Delete the old deployment
 kubectl delete deployment n8n-deployment -n n8n
 
-# Reapply with corrected image
+# Reapply with corrected image (v1.26.0)
 kubectl apply -f n8n-deployment.yaml
 
 # Wait for pod to be ready
